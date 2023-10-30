@@ -12,6 +12,7 @@ import { Layout, Menu, Button, theme, Avatar, MenuProps, Input } from 'antd';
 const { Header, Sider, Content } = Layout;
 
 import { Link, Outlet } from 'react-router-dom';
+import noUserImage from '~/assets/images/no-user-image.jpg';
 
 const { Search } = Input;
 
@@ -35,7 +36,7 @@ function getItem(
 
 const items: MenuProps['items'] = [
     getItem(<Link to={'/admin'}>Dashboard</Link>, '1', <BarChartOutlined />),
-    { type: 'divider' },
+    // { type: 'divider' },
 
     getItem(
         'Data',
@@ -52,17 +53,17 @@ const items: MenuProps['items'] = [
 
 const AdminLayout = () => {
     const [collapsed, setCollapsed] = useState(false);
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
+    // const {
+    //     token: { colorBgContainer },
+    // } = theme.useToken();
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider width={240} style={{ backgroundColor: '#f2f0f0' }} trigger={null} collapsible collapsed={collapsed}>
                 <div style={{ textAlign: 'center', margin: `${collapsed ? '20px 0 16px' : '26px 0 22px'}` }}>
                     <img
-                        src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-6/361662563_2008056929535886_6055480052581152893_n.jpg?stp=cp6_dst-jpg&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_ohc=4AWjKlNJJcoAX9aTD-z&_nc_ht=scontent.fhan2-4.fna&oh=00_AfCEDTCrmAo_l3G-I-O60oy8zNDvrqO9Tw5cy0JX7gogUw&oe=65425044"
-                        alt="Img"
+                        src={noUserImage}
+                        alt="Avatar"
                         style={{
                             maxWidth: `${collapsed ? '70%' : '44%'}`,
                             borderRadius: '50%',
@@ -70,7 +71,7 @@ const AdminLayout = () => {
                         }}
                     />
                     <p style={{ fontSize: `${collapsed ? '16px' : '24px'}`, fontWeight: 700, marginBottom: 0 }}>
-                        Phạm Tuấn
+                        Pham Tuan
                     </p>
                     <p
                         style={{
@@ -85,14 +86,14 @@ const AdminLayout = () => {
                 </div>
                 <Menu
                     theme="light"
-                    style={{ background: '#f2f0f0' }}
+                    style={{ background: '#f2f0f0', border: 'none' }}
                     mode="inline"
                     defaultSelectedKeys={['1']}
                     items={items}
                 />
             </Sider>
-            <Layout style={{ background: colorBgContainer }}>
-                <Header style={{ background: colorBgContainer }}>
+            <Layout style={{ background: '#fcfcfc' }}>
+                <Header style={{ background: '#fcfcfc' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Button
@@ -101,16 +102,21 @@ const AdminLayout = () => {
                                 onClick={() => setCollapsed(!collapsed)}
                                 style={{
                                     fontSize: '16px',
-                                    width: 64,
-                                    height: 64,
-                                    marginRight: 20,
+                                    width: 46,
+                                    height: 46,
+                                    marginRight: 28,
                                 }}
                             />
                             <Search placeholder="Search . . ." size="large" allowClear style={{ width: 260 }} />
                         </div>
                         <div style={{ marginRight: 36 }}>
                             <Avatar
-                                style={{ backgroundColor: 'transparent', color: '#1d1d1d' }}
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    color: '#1d1d1d',
+                                    cursor: 'pointer',
+                                    transform: 'translateY(-10%)',
+                                }}
                                 size={40}
                                 icon={<UserOutlined />}
                             />
@@ -121,7 +127,7 @@ const AdminLayout = () => {
                     style={{
                         margin: '0 16px',
                         padding: 16,
-                        background: '#f2f0f0',
+                        // background: '#f2f0f0',
                     }}
                 >
                     <Outlet />
