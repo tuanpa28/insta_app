@@ -1,11 +1,13 @@
 import { PlusCircleOutlined, LockOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm, Space, message, InputRef, Input } from 'antd';
+import { Button, Table, Popconfirm, Space, message, InputRef, Input, Skeleton } from 'antd';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import Highlighter from 'react-highlight-words';
 import { useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './User.module.scss';
+import { useGetAllUserQuery } from '~/redux/userApi';
+import { IUser } from '~/types/user.type';
 
 const cx = classNames.bind(styles);
 
@@ -14,8 +16,14 @@ const UserPage = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
 
-    const confirm = () => {
-        message.success(`Thành công!`);
+    const { data, error, isLoading } = useGetAllUserQuery();
+
+    if (isLoading) return <Skeleton active paragraph={{ rows: 4 }} />;
+
+    if (error) return JSON.stringify(error);
+
+    const confirm = (value: string) => {
+        message.success(`Thành công! ${value}`);
     };
 
     const cancel = () => {
@@ -111,42 +119,6 @@ const UserPage = () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data: any[] = [
-        {
-            username: 'pham_tuan',
-            email: 'phamanhtuan2833@gmail.com',
-            age: 20,
-            bio: 'hihi',
-            gender: 'male',
-            current_city: 'Bắc Từ Liêm, Hà Nội',
-        },
-        {
-            username: 'John Brown',
-            email: 'johnbrown@gmail.com',
-            age: 32,
-            bio: 'kkk',
-            gender: 'male',
-            current_city: 'New York No. 1 Lake Park',
-        },
-        {
-            username: 'John Brown',
-            email: 'johnbrown@gmail.com',
-            age: 32,
-            bio: 'kkk',
-            gender: 'women',
-            current_city: 'New York No. 1 Lake Park',
-        },
-        {
-            username: 'John Brown',
-            email: 'johnbrown@gmail.com',
-            age: 32,
-            bio: 'kkk',
-            gender: 'male',
-            current_city: 'New York No. 1 Lake Park',
-        },
-    ];
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const columns: ColumnsType<any> = [
         {
             title: '#',
@@ -168,6 +140,16 @@ const UserPage = () => {
             ...getColumnSearchProps('username'),
         },
         {
+            title: 'Full Name',
+            dataIndex: 'full_name',
+            key: 'full_name',
+            sorter: {
+                compare: (a, b) => a.full_name.localeCompare(b.full_name),
+                // multiple: 2,
+            },
+            ...getColumnSearchProps('full_name'),
+        },
+        {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
@@ -176,15 +158,6 @@ const UserPage = () => {
                 // multiple: 2,
             },
             ...getColumnSearchProps('email'),
-        },
-        {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
-            sorter: {
-                compare: (a, b) => a.age - b.age,
-                // multiple: 2,
-            },
         },
         Table.EXPAND_COLUMN,
         {
@@ -215,6 +188,12 @@ const UserPage = () => {
             ...getColumnSearchProps('current_city'),
         },
         {
+            title: 'Access Level',
+            dataIndex: 'isAdmin',
+            key: 'isAdmin',
+            render: (text) => <span className={cx('access-level')}>{text ? 'Admin' : 'User'}</span>,
+        },
+        {
             title: 'Action',
             key: 'action',
             render: (record) => (
@@ -223,7 +202,7 @@ const UserPage = () => {
                         placement="topRight"
                         title="Vô hiệu hóa người dùng?"
                         description="Bạn có chắc chắn muốn vô hiệu hóa người dùng này không?"
-                        onConfirm={confirm}
+                        onConfirm={() => confirm(record.full_name)}
                         onCancel={cancel}
                         okText="Yes"
                         cancelText="Cancel"
@@ -239,7 +218,7 @@ const UserPage = () => {
     ];
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newData = data.map((item: any, index: number) => ({
+    const newData = data?.data?.data.map((item: IUser, index: number) => ({
         ...item,
         key: index + 1,
     }));

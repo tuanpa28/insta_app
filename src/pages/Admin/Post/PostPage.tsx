@@ -1,11 +1,13 @@
 import { PlusCircleOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm, Space, message, InputRef, Input } from 'antd';
+import { Button, Table, Popconfirm, Space, message, InputRef, Input, Skeleton } from 'antd';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import Highlighter from 'react-highlight-words';
 import { useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Post.module.scss';
+import { useGetAllPostQuery } from '~/redux/postApi';
+import { IPost } from '~/types/post.type';
 
 const cx = classNames.bind(styles);
 
@@ -14,8 +16,14 @@ const PostPage = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
 
-    const confirm = () => {
-        message.success(`Thành công!`);
+    const { data, error, isLoading } = useGetAllPostQuery();
+
+    if (isLoading) return <Skeleton active paragraph={{ rows: 4 }} />;
+
+    if (error) return JSON.stringify(error);
+
+    const confirm = (value: string) => {
+        message.success(`Thành công! ${value}`);
     };
 
     const cancel = () => {
@@ -111,22 +119,6 @@ const PostPage = () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data: any[] = [
-        {
-            user_id: 'pham_tuan',
-            caption: 'Hướng dẫn tắm bằng nước',
-            likes: ['1', '2', '3'],
-            shares: ['1'],
-        },
-        {
-            user_id: 'Phạm Anh Tuấn',
-            caption: 'Hiiihi',
-            likes: ['1', '2', '3', '4'],
-            shares: ['1', '2'],
-        },
-    ];
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const columns: ColumnsType<any> = [
         {
             title: '#',
@@ -141,32 +133,12 @@ const PostPage = () => {
             title: 'User',
             dataIndex: 'user_id',
             key: 'user_id',
+            render: (text) => <span>{text?.full_name}</span>,
             sorter: {
-                compare: (a, b) => a.user_id.localeCompare(b.user_id),
+                compare: (a, b) => a.user_id?.full_name.localeCompare(b.user_id?.full_name),
                 // multiple: 2,
             },
-            ...getColumnSearchProps('user_id'),
-        },
-
-        {
-            title: 'Quantity Likes',
-            dataIndex: 'likes',
-            key: 'likes',
-            render: (text) => <a>{text.length}</a>,
-            sorter: {
-                compare: (a, b) => a.likes.length - b.likes.length,
-                // multiple: 2,
-            },
-        },
-        {
-            title: 'Quantity Shares',
-            dataIndex: 'shares',
-            key: 'shares',
-            render: (text) => <a>{text.length}</a>,
-            sorter: {
-                compare: (a, b) => a.shares.length - b.shares.length,
-                // multiple: 2,
-            },
+            // ...getColumnSearchProps('user_id?.full_name'),
         },
         Table.EXPAND_COLUMN,
         {
@@ -178,6 +150,27 @@ const PostPage = () => {
             },
         },
         {
+            title: 'Quantity Likes',
+            dataIndex: 'likes',
+            key: 'likes',
+            render: (text) => <span>{text.length}</span>,
+            sorter: {
+                compare: (a, b) => a.likes.length - b.likes.length,
+                // multiple: 2,
+            },
+        },
+        {
+            title: 'Quantity Shares',
+            dataIndex: 'shares',
+            key: 'shares',
+            render: (text) => <span>{text.length}</span>,
+            sorter: {
+                compare: (a, b) => a.shares.length - b.shares.length,
+                // multiple: 2,
+            },
+        },
+
+        {
             title: 'Action',
             key: 'action',
             render: (record) => (
@@ -186,7 +179,7 @@ const PostPage = () => {
                         placement="topRight"
                         title="Xóa bài viết?"
                         description="Bạn có chắc chắn muốn xóa bài viết này không?"
-                        onConfirm={confirm}
+                        onConfirm={() => confirm(record.caption)}
                         onCancel={cancel}
                         okText="Yes"
                         cancelText="Cancel"
@@ -202,7 +195,7 @@ const PostPage = () => {
     ];
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newData = data.map((item: any, index: number) => ({
+    const newData = data?.data?.data.map((item: IPost, index: number) => ({
         ...item,
         key: index + 1,
     }));
