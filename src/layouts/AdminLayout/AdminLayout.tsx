@@ -12,7 +12,7 @@ import { Layout, Menu, Button, theme, Avatar, MenuProps, Input } from 'antd';
 const { Header, Sider, Content } = Layout;
 
 import { Link, Outlet } from 'react-router-dom';
-import noUserImage from '~/assets/images/no-user-image.jpg';
+import images from '~/assets/images';
 
 const { Search } = Input;
 
@@ -62,7 +62,7 @@ const AdminLayout = () => {
             <Sider width={240} style={{ backgroundColor: '#f2f0f0' }} trigger={null} collapsible collapsed={collapsed}>
                 <div style={{ textAlign: 'center', margin: `${collapsed ? '20px 0 16px' : '26px 0 22px'}` }}>
                     <img
-                        src={noUserImage}
+                        src={images.noImage}
                         alt="Avatar"
                         style={{
                             maxWidth: `${collapsed ? '70%' : '44%'}`,

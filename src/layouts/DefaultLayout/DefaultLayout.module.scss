@@ -1,0 +1,17 @@
+.wrapper {
+    display: flex;
+    .main {
+        width: calc(100% - var(--nav-medium-width));
+        margin-left: auto;
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: width ease 0.3s;
+        &.fullMain {
+            width: calc(100% - var(--nav-narrow-width));
+        }
+        .content {
+        }
+    }
+}

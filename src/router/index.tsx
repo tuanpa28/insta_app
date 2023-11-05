@@ -1,10 +1,13 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import AdminLayout from '~/layouts/AdminLayout';
 import DefaultLayout from '~/layouts/DefaultLayout';
-import DashboardPage from '~/pages/Admin/Dashboard/DashboardPage';
-import PostPage from '~/pages/Admin/Post/PostPage';
-import UserPage from '~/pages/Admin/User/UserPage';
+import Dashboard from '~/pages/Admin/Dashboard';
+import Post from '~/pages/Admin/Post';
+import User from '~/pages/Admin/User';
+import Explore from '~/pages/Explore';
 import Home from '~/pages/Home';
+import Messages from '~/pages/Messages';
+import Reels from '~/pages/Reels';
 
 const router = createBrowserRouter([
     // Client
@@ -15,6 +18,18 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: <Home />,
+            },
+            {
+                path: 'explore',
+                element: <Explore />,
+            },
+            {
+                path: 'reels',
+                element: <Reels />,
+            },
+            {
+                path: 'inbox',
+                element: <Messages />,
             },
         ],
     },
@@ -30,15 +45,15 @@ const router = createBrowserRouter([
             },
             {
                 path: 'dashboard',
-                element: <DashboardPage />,
+                element: <Dashboard />,
             },
             {
                 path: 'user',
-                element: <UserPage />,
+                element: <User />,
             },
             {
                 path: 'post',
-                element: <PostPage />,
+                element: <Post />,
             },
         ],
     },
