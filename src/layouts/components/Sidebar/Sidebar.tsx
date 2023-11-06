@@ -27,6 +27,8 @@ import Image from '~/components/Image';
 import { useState } from 'react';
 import ModalMore from '../ModalMore';
 import ModalCreatePost from '../ModalCreatePost';
+import Search from '../Search';
+import Notifications from '../Notifications';
 
 const cx = classNames.bind(styles);
 
@@ -38,7 +40,8 @@ const Sidebar = ({ handleFullMain = () => {} }: ISidebar) => {
     const [showModalMore, setShowModalMore] = useState(false);
     const [showModalCreatePost, setShowModalCreatePost] = useState(false);
     const [sizeSidebar, setSizeSidebar] = useState(false);
-    const [hideMenuText, setHideMenuText] = useState(false);
+    const [showFormSearch, setShowFormSearch] = useState(false);
+    const [showNotifications, setShowNotifications] = useState(false);
 
     const handleShowModalMore = (event: any) => {
         event.preventDefault();
@@ -50,22 +53,44 @@ const Sidebar = ({ handleFullMain = () => {} }: ISidebar) => {
         setShowModalCreatePost(!showModalCreatePost);
     };
 
-    const handleSizeSidebar = (event: any) => {
-        event.preventDefault();
-        setSizeSidebar(!sizeSidebar);
-        setHideMenuText(!hideMenuText);
-    };
-
     const handleClickMessages = () => {
         setSizeSidebar(true);
         handleFullMain(true);
-        setHideMenuText(true);
+        if (showFormSearch) {
+            setShowFormSearch(false);
+        }
+        if (showNotifications) {
+            setShowNotifications(false);
+        }
     };
 
     const handleSidebarBig = () => {
         handleFullMain(false);
         setSizeSidebar(false);
-        setHideMenuText(false);
+        if (showFormSearch) {
+            setShowFormSearch(false);
+        }
+        if (showNotifications) {
+            setShowNotifications(false);
+        }
+    };
+
+    const handleClickSearch = (event: any) => {
+        event.preventDefault();
+        setSizeSidebar(!sizeSidebar);
+        setShowFormSearch(!sizeSidebar);
+        if (showNotifications) {
+            setShowNotifications(false);
+        }
+    };
+
+    const handleClickNotifications = (event: any) => {
+        event.preventDefault();
+        setSizeSidebar(!sizeSidebar);
+        setShowNotifications(!sizeSidebar);
+        if (showFormSearch) {
+            setShowFormSearch(false);
+        }
     };
 
     return (
@@ -93,29 +118,32 @@ const Sidebar = ({ handleFullMain = () => {} }: ISidebar) => {
                             to={'/'}
                             icon={<HomeIcon />}
                             activeIcon={<HomeActiveIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                         <MenuItem
-                            onClick={handleSizeSidebar}
+                            onClick={handleClickSearch}
+                            isActive={showFormSearch}
                             title="Search"
                             to={'/search'}
                             icon={<SearchIcon />}
                             activeIcon={<SearchActiveIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                         <MenuItem
+                            onClick={handleSidebarBig}
                             title="Explore"
                             to={'/explore'}
                             icon={<ExploreIcon />}
                             activeIcon={<ExploreActiveIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                         <MenuItem
+                            onClick={handleSidebarBig}
                             title="Reels"
                             to={'/reels'}
                             icon={<ReelsIcon />}
                             activeIcon={<ReelsActiveIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                         <MenuItem
                             onClick={handleClickMessages}
@@ -123,28 +151,30 @@ const Sidebar = ({ handleFullMain = () => {} }: ISidebar) => {
                             to={'/inbox'}
                             icon={<MessageIcon />}
                             activeIcon={<MessageActiveIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                         <MenuItem
-                            onClick={handleSizeSidebar}
+                            onClick={handleClickNotifications}
+                            isActive={showNotifications}
                             title="Notifications"
                             to={'/notifications'}
                             icon={<NotificationIcon />}
                             activeIcon={<NotificationActiveIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                         <MenuItem
                             onClick={handleShowModalCreatePost}
                             title="Create"
                             to={'/create'}
                             icon={<CreateIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                         <MenuItem
+                            onClick={handleSidebarBig}
                             title="Profile"
                             to={'/profile'}
                             icon={<Image className={cx('sidebar-avatar')} alt="Avatar" />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                     </Menu>
                     <div className={cx('footer')}>
@@ -153,7 +183,7 @@ const Sidebar = ({ handleFullMain = () => {} }: ISidebar) => {
                             to={'/threads'}
                             icon={<ThreadsIcon />}
                             subIcon={!sizeSidebar && <BoxArrowUpRightIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                         <MenuItem
                             onClick={handleShowModalMore}
@@ -162,11 +192,14 @@ const Sidebar = ({ handleFullMain = () => {} }: ISidebar) => {
                             to={'/more'}
                             icon={<MoreIcon />}
                             activeIcon={<MoreActiveIcon />}
-                            isHideMenuText={hideMenuText}
+                            isHideMenuText={sizeSidebar}
                         />
                     </div>
                 </div>
-
+                {/* Search */}
+                <Search open={showFormSearch} />
+                {/* Notifications */}
+                <Notifications open={showNotifications} />
                 {/* Modal More */}
                 <ModalMore open={showModalMore} />
             </div>

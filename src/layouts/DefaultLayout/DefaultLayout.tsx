@@ -10,12 +10,9 @@ const cx = classNames.bind(styles);
 const DefaultLayout = () => {
     const [fullMain, setFullMain] = useState(false);
 
-    const handleFullMain = (status: boolean) => {
-        setFullMain(status);
-    };
     return (
         <div className={cx('wrapper')}>
-            <Sidebar handleFullMain={handleFullMain} />
+            <Sidebar handleFullMain={setFullMain} />
             <main className={cx('main', { fullMain })}>
                 <div className={cx('content')}>
                     <Outlet />
