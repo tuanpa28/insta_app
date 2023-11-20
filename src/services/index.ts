@@ -1,1 +1,2 @@
-export { default } from './searchUser';
+export * as userService from './userService';
+export * as postService from './postService';

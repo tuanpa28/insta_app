@@ -3,7 +3,7 @@ export interface IUser {
     _id?: string;
     googleId?: string;
     username: string;
-    email: string;
+    email?: string;
     full_name: string;
     profile_image?: string;
     bio?: string;
@@ -11,7 +11,8 @@ export interface IUser {
     gender?: string;
     current_city?: string;
     from?: string;
-    followers?: any;
-    followings?: any;
+    followers?: Array<any>;
+    followings?: Array<any>;
+    tick?: boolean;
     isAdmin?: boolean;
 }

@@ -16,8 +16,8 @@ const DefaultLayout = () => {
             <main className={cx('main', { fullMain })}>
                 <div className={cx('content')}>
                     <Outlet />
+                    <Footer />
                 </div>
-                <Footer />
             </main>
         </div>
     );

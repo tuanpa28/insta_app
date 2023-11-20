@@ -10,11 +10,8 @@ const NotifiItem = () => {
         <Link to={`/@tuanpa03`} className={cx('wrapper')}>
             <Image className={cx('avatar')} src={''} alt={'Phạm Anh Tuấn'} />
             <span className={cx('content')}>
-                Follow{' '}
-                <Link className={cx('user-name')} to={'/'}>
-                    tuanpa03
-                </Link>{' '}
-                and others you know to see their photos and videos.
+                Follow <span className={cx('user-name')}>tuanpa03</span> and others you know to see their photos and
+                videos.
             </span>
         </Link>
     );

@@ -6,7 +6,7 @@ const postApi = createApi({
     reducerPath: 'post',
     tagTypes: ['Post'],
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/',
+        baseUrl: import.meta.env.VITE_BASE_URL,
         // Set token vào header
         // prepareHeaders: (headers) => {
         //     const token = localStorage.getItem('token');

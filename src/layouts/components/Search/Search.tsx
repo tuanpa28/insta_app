@@ -5,8 +5,9 @@ import AccountItem from '~/components/AccountItem';
 import { Skeleton } from 'antd';
 import { useEffect, useState, useRef } from 'react';
 import { useDebounce } from '~/hooks';
-import searchUser from '~/services';
+import { userService } from '~/services';
 import { IUser } from '~/types/user.type';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -30,7 +31,7 @@ const Search = ({ open }: ISearch) => {
         (async () => {
             setLoading(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { data }: any = await searchUser(debouncedValue);
+            const { data }: any = await userService.search(debouncedValue);
             setSearchResult(data.data.data);
             setLoading(false);
         })();
@@ -115,7 +116,11 @@ const Search = ({ open }: ISearch) => {
                         </>
                     )}
                     {searchResult && searchResult.length > 0 ? (
-                        searchResult?.map((item: IUser) => <AccountItem user={item} />)
+                        searchResult?.map((item: IUser, index: number) => (
+                            <Link key={index} to={`/${item.username}`}>
+                                <AccountItem user={item} hasBorder />
+                            </Link>
+                        ))
                     ) : (
                         <div className={cx('not-found')}>No results found.</div>
                     )}
