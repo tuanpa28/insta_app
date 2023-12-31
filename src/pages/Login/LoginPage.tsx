@@ -59,7 +59,7 @@ const LoginPage = () => {
 
         // Mở cửa sổ popup
         window.open(
-            'http://localhost:8080/api/auth/google',
+            `${import.meta.env.VITE_BASE_URL}auth/google`,
             '_blank',
             `width=${popupWidth}, height=${popupHeight}, left=${left}, top=${top}`,
         );

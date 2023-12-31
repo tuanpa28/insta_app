@@ -53,7 +53,7 @@ const ModalCreatePost = ({ open, onClick }: IModalCreatePost) => {
 
         try {
             setLoading(true);
-            const { data } = await axios.post('http://localhost:8080/api/upload/images', formData);
+            const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}upload/images`, formData);
             console.log('Upload image response:', data.data);
             setLoading(false);
             setUploaded(true);
@@ -69,7 +69,7 @@ const ModalCreatePost = ({ open, onClick }: IModalCreatePost) => {
 
         try {
             setLoading(true);
-            const { data } = await axios.post('http://localhost:8080/api/upload/video', formData);
+            const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}upload/video`, formData);
             console.log('Upload video response:', data.data);
             setLoading(false);
             setUploaded(true);
