@@ -5,32 +5,25 @@ import styles from './SidebarFeed.module.scss';
 import AccountItem from '~/components/AccountItem';
 import { userService } from '~/services';
 import { IUser } from '~/types/user.type';
+import { useAppSelector } from '~/redux/hook';
 
 const cx = classNames.bind(styles);
 
 const SidebarFeed = () => {
     const [userSuggested, setSserSuggested] = useState([]);
+    const user = useAppSelector((state) => state.user.currentUser.values);
 
     useEffect(() => {
         (async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { data }: any = await userService.getUsersSuggested();
-            setSserSuggested(data.data.data);
+            const response = await userService.getUsersSuggested();
+            setSserSuggested(response?.data?.data);
         })();
     }, []);
 
-    const user = {
-        email: 'phamanhtuan2833@gmail.com',
-        full_name: 'Phạm Anh Tuấn',
-        profile_image: '',
-        username: 'patuan.03',
-        tick: true,
-        _id: '655b1a56c526d34e98b55102',
-    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('head')}>
-                <AccountItem className={cx('current-user')} user={user} btn="Switch" />
+                {user && <AccountItem className={cx('current-user')} user={user} btn="Switch" />}
             </div>
             <div className={cx('body')}>
                 <div className={cx('head-body')}>

@@ -5,9 +5,9 @@ import type { ColumnsType, ColumnType } from 'antd/es/table';
 import Highlighter from 'react-highlight-words';
 import { useRef, useState } from 'react';
 import classNames from 'classnames/bind';
-import styles from './User.module.scss';
-import { useGetAllUserQuery } from '~/redux/userApi';
+import { useGetListUser } from '~/hooks';
 import { IUser } from '~/types/user.type';
+import styles from './User.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -16,9 +16,7 @@ const UserPage = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
 
-    const { data, error, isLoading } = useGetAllUserQuery();
-
-    if (isLoading) return <Skeleton active paragraph={{ rows: 4 }} />;
+    const { data, error, isLoading } = useGetListUser();
 
     if (error) return JSON.stringify(error);
 
@@ -124,6 +122,8 @@ const UserPage = () => {
             title: '#',
             dataIndex: 'key',
             key: 'key',
+            width: 40,
+            align: 'center',
             sorter: {
                 compare: (a, b) => a.key - b.key,
                 // multiple: 2,
@@ -133,6 +133,7 @@ const UserPage = () => {
             title: 'User Name',
             dataIndex: 'username',
             key: 'username',
+            width: 140,
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
                 multiple: 2,
@@ -143,6 +144,7 @@ const UserPage = () => {
             title: 'Full Name',
             dataIndex: 'full_name',
             key: 'full_name',
+            width: 200,
             sorter: {
                 compare: (a, b) => a.full_name.localeCompare(b.full_name),
                 // multiple: 2,
@@ -153,6 +155,7 @@ const UserPage = () => {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
+            width: 200,
             sorter: {
                 compare: (a, b) => a.email.localeCompare(b.email),
                 // multiple: 2,
@@ -164,6 +167,7 @@ const UserPage = () => {
             title: 'Bio',
             dataIndex: 'bio',
             key: 'bio',
+            width: 140,
             render: (text) => {
                 return text.slice(0, 50).concat(' . . .');
             },
@@ -172,6 +176,8 @@ const UserPage = () => {
             title: 'Gender',
             key: 'gender',
             dataIndex: 'gender',
+            width: 80,
+            align: 'center',
             sorter: {
                 compare: (a, b) => a.gender.localeCompare(b.gender),
                 // multiple: 2,
@@ -181,6 +187,7 @@ const UserPage = () => {
             title: 'City',
             dataIndex: 'current_city',
             key: 'current_city',
+            width: 160,
             sorter: {
                 compare: (a, b) => a.current_city.localeCompare(b.current_city),
                 // multiple: 2,
@@ -191,11 +198,15 @@ const UserPage = () => {
             title: 'Access Level',
             dataIndex: 'isAdmin',
             key: 'isAdmin',
+            width: 100,
+            align: 'center',
             render: (text) => <span className={cx('access-level')}>{text ? 'Admin' : 'User'}</span>,
         },
         {
             title: 'Action',
             key: 'action',
+            width: 110,
+            align: 'center',
             render: (record) => (
                 <Space size="middle">
                     <Popconfirm
@@ -217,8 +228,7 @@ const UserPage = () => {
         },
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newData = data?.data?.data.map((item: IUser, index: number) => ({
+    const newData = data?.map((item: IUser, index: number) => ({
         ...item,
         key: index + 1,
     }));
@@ -234,16 +244,21 @@ const UserPage = () => {
                     Create Account
                 </Button>
             </div>
-            <Table
-                // pagination={{ pageSize: 8 }}
-                size="middle"
-                columns={columns}
-                dataSource={newData}
-                rowSelection={{}}
-                expandable={{
-                    expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.bio}</p>,
-                }}
-            />
+            {!isLoading && data.length > 0 ? (
+                <Table
+                    // pagination={{ pageSize: 8 }}
+                    size="middle"
+                    columns={columns}
+                    dataSource={newData}
+                    // rowSelection={{}}
+                    scroll={{ y: 450 }}
+                    expandable={{
+                        expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.bio}</p>,
+                    }}
+                />
+            ) : (
+                <Skeleton active paragraph={{ rows: 4 }} />
+            )}
         </>
     );
 };

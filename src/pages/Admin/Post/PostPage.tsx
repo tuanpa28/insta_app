@@ -6,7 +6,7 @@ import Highlighter from 'react-highlight-words';
 import { useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Post.module.scss';
-import { useGetAllPostQuery } from '~/redux/postApi';
+import { useGetListPost } from '~/hooks';
 import { IPost } from '~/types/post.type';
 
 const cx = classNames.bind(styles);
@@ -16,9 +16,7 @@ const PostPage = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
 
-    const { data, error, isLoading } = useGetAllPostQuery();
-
-    if (isLoading) return <Skeleton active paragraph={{ rows: 4 }} />;
+    const { data, error, isLoading } = useGetListPost();
 
     if (error) return JSON.stringify(error);
 
@@ -124,6 +122,8 @@ const PostPage = () => {
             title: '#',
             dataIndex: 'key',
             key: 'key',
+            width: 40,
+            align: 'center',
             sorter: {
                 compare: (a, b) => a.key - b.key,
                 // multiple: 2,
@@ -133,6 +133,7 @@ const PostPage = () => {
             title: 'User',
             dataIndex: 'user_id',
             key: 'user_id',
+            width: 220,
             render: (text) => <span>{text?.full_name}</span>,
             sorter: {
                 compare: (a, b) => a.user_id?.full_name.localeCompare(b.user_id?.full_name),
@@ -145,6 +146,7 @@ const PostPage = () => {
             title: 'Caption',
             dataIndex: 'caption',
             key: 'caption',
+            width: 400,
             render: (text) => {
                 return text.slice(0, 50).concat(' . . .');
             },
@@ -153,6 +155,8 @@ const PostPage = () => {
             title: 'Quantity Likes',
             dataIndex: 'likes',
             key: 'likes',
+            width: 140,
+            align: 'center',
             render: (text) => <span>{text.length}</span>,
             sorter: {
                 compare: (a, b) => a.likes.length - b.likes.length,
@@ -163,6 +167,8 @@ const PostPage = () => {
             title: 'Quantity Shares',
             dataIndex: 'shares',
             key: 'shares',
+            width: 140,
+            align: 'center',
             render: (text) => <span>{text.length}</span>,
             sorter: {
                 compare: (a, b) => a.shares.length - b.shares.length,
@@ -173,6 +179,8 @@ const PostPage = () => {
         {
             title: 'Action',
             key: 'action',
+            width: 110,
+            align: 'center',
             render: (record) => (
                 <Space size="middle">
                     <Popconfirm
@@ -194,8 +202,7 @@ const PostPage = () => {
         },
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newData = data?.data?.data.map((item: IPost, index: number) => ({
+    const newData = data.map((item: IPost, index: number) => ({
         ...item,
         key: index + 1,
     }));
@@ -211,16 +218,21 @@ const PostPage = () => {
                     Create Post
                 </Button>
             </div>
-            <Table
-                // pagination={{ pageSize: 8 }}
-                size="middle"
-                columns={columns}
-                dataSource={newData}
-                rowSelection={{}}
-                expandable={{
-                    expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.caption}</p>,
-                }}
-            />
+            {!isLoading && data.length > 0 ? (
+                <Table
+                    // pagination={{ pageSize: 8 }}
+                    size="middle"
+                    columns={columns}
+                    dataSource={newData}
+                    // rowSelection={{}}
+                    scroll={{ y: 450 }}
+                    expandable={{
+                        expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.caption}</p>,
+                    }}
+                />
+            ) : (
+                <Skeleton active paragraph={{ rows: 4 }} />
+            )}
         </>
     );
 };

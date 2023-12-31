@@ -1,4 +1,5 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { PrivateAdmin, PrivateAuth, PrivateRoute } from '~/components/Private';
 import AdminLayout from '~/layouts/AdminLayout';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import Dashboard from '~/pages/Admin/Dashboard';
@@ -6,6 +7,7 @@ import Post from '~/pages/Admin/Post';
 import User from '~/pages/Admin/User';
 import Explore from '~/pages/Explore';
 import Home from '~/pages/Home';
+import Login from '~/pages/Login';
 import Messages from '~/pages/Messages';
 import Reels from '~/pages/Reels';
 
@@ -13,7 +15,7 @@ const router = createBrowserRouter([
     // Client
     {
         path: '/',
-        element: <DefaultLayout />,
+        element: <PrivateRoute element={<DefaultLayout />} />,
         children: [
             {
                 index: true,
@@ -33,11 +35,10 @@ const router = createBrowserRouter([
             },
         ],
     },
-
     // Admin
     {
         path: '/admin',
-        element: <AdminLayout />,
+        element: <PrivateAdmin element={<AdminLayout />} />,
         children: [
             {
                 index: true,
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
                 element: <Post />,
             },
         ],
+    },
+    {
+        path: '/login',
+        element: <PrivateAuth element={<Login />} />,
     },
 ]);
 

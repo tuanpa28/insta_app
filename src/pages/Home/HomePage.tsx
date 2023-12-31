@@ -1,28 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
 import SidebarFeed from '~/components/SidebarFeed';
 import PostItem from '~/components/PostItem';
 import { LoadingIcon } from '~/components/Icons';
-import { postService } from '~/services';
 import { IPost } from '~/types/post.type';
+import { useGetPostTimeLine } from '~/hooks';
 
 const cx = classNames.bind(styles);
 
 const HomePage = () => {
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const { isLoading, error, data: posts } = useGetPostTimeLine();
 
-    useEffect(() => {
-        (async () => {
-            setLoading(true);
-            const { data }: any = await postService.getPostTimeLine();
-
-            setPosts(data.data);
-            setLoading(false);
-        })();
-    }, []);
+    if (error) return JSON.stringify(error);
 
     return (
         <div className={cx('wrapper')}>
@@ -92,7 +81,7 @@ const HomePage = () => {
                             <PostItem key={index} post={post} />
                         ))}
                     </div>
-                    {loading && (
+                    {isLoading && (
                         <div className={cx('loading')}>
                             <LoadingIcon className={cx('icon')} />
                         </div>

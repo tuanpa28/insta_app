@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import styles from './Button.module.scss';
@@ -11,15 +12,13 @@ interface IButton {
     children: React.ReactNode;
     className?: string;
     icon?: React.ReactNode;
+    onClick?: () => void;
 }
 
-const Button = ({ to, href, primary = false, children, className, icon, ...passProps }: IButton) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Button = ({ to, href, primary = false, children, className, icon, onClick, ...passProps }: IButton) => {
     let Comp: any = 'button';
-    const props: {
-        href?: string;
-        to?: string;
-    } = {
+    const props: any = {
+        onClick,
         ...passProps,
     };
 

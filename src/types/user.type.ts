@@ -7,7 +7,7 @@ export interface IUser {
     full_name: string;
     profile_image?: string;
     bio?: string;
-    date_of_birth?: Date;
+    date_of_birth?: string;
     gender?: string;
     current_city?: string;
     from?: string;
@@ -15,4 +15,21 @@ export interface IUser {
     followings?: Array<any>;
     tick?: boolean;
     isAdmin?: boolean;
+}
+
+export interface IAuth {
+    email: string;
+    password: string;
+    username?: string;
+    full_name?: string;
+}
+
+export interface IUserState {
+    users: IUser[];
+    currentUser: {
+        values: IUser | null;
+        accessToken: string;
+    };
+    isLogged: boolean;
+    isAdmin: boolean | null;
 }

@@ -1,13 +1,13 @@
+import { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { BiSolidXCircle, BiLoader } from 'react-icons/bi';
+import { Skeleton } from 'antd';
 import classNames from 'classnames/bind';
 import styles from './Search.module.scss';
-import { BiSolidXCircle, BiLoader } from 'react-icons/bi';
 import AccountItem from '~/components/AccountItem';
-import { Skeleton } from 'antd';
-import { useEffect, useState, useRef } from 'react';
 import { useDebounce } from '~/hooks';
 import { userService } from '~/services';
 import { IUser } from '~/types/user.type';
-import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -30,9 +30,8 @@ const Search = ({ open }: ISearch) => {
         }
         (async () => {
             setLoading(true);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { data }: any = await userService.search(debouncedValue);
-            setSearchResult(data.data.data);
+            const response = await userService.search(debouncedValue);
+            setSearchResult(response?.data?.data);
             setLoading(false);
         })();
     }, [debouncedValue]);
