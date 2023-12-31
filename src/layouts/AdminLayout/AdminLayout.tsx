@@ -7,7 +7,8 @@ import {
     FileTextOutlined,
     BarChartOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Button, theme, Avatar, MenuProps, Input } from 'antd';
+import { Layout, Menu, Button, Avatar, MenuProps, Input } from 'antd';
+// import { theme } from 'antd';
 
 const { Header, Sider, Content } = Layout;
 

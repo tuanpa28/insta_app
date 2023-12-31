@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IUser } from './user.type';
 export interface IPost {
     _id?: string;
-    user_id: IUser | string;
+    user_id: any;
     caption: string;
     media: Array<any>;
     likes: Array<any>;
